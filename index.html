@@ -91,27 +91,32 @@
   </div>
 
   <script>
-    const allQuestions = [
-      {q: 'Which language styles web pages?', a:['HTML','CSS','Python','C++'], correct:1},
-      {q: 'What does HTML stand for?', a:['HyperText Markup Language','Home Tool Markup','Hyperlinks and Text Markup','HighText Machine Language'], correct:0},
-      {q: 'Which of these is a JS framework?', a:['Django','Flask','React','Laravel'], correct:2},
-      {q: 'Which data structure uses LIFO?', a:['Queue','Stack','Tree','Graph'], correct:1},
-      {q: 'Command to init Git repo?', a:['git init','git start','git new','git create'], correct:0},
-      {q: 'CSS stands for?', a:['Cascading Style Sheets','Computer Style Sheets','Creative Style System','Colorful Style Sheets'], correct:0},
-      {q: 'Which symbol is used for comments in JS?', a:['//','#','/* */','$$'], correct:0},
-      {q: 'Which method adds an element at the end of an array in JS?', a:['push','pop','shift','unshift'], correct:0},
-      {q: 'Which HTML tag is for a hyperlink?', a:['<a>','<link>','<href>','<h1>'], correct:0},
-      {q: 'Python is a ?', a:['Compiled','Interpreted','Markup','Assembly'], correct:1},
-      {q: 'Which HTML tag is for table row?', a:['<tr>','<td>','<table>','<th>'], correct:0},
-      {q: 'JS uses which for equality check?', a:['=','==','===','!='], correct:2},
-      {q: 'Which is used to declare a variable in JS?', a:['var','let','const','All of these'], correct:3},
-      {q: 'Which method is used to remove last element in array in JS?', a:['pop','push','shift','unshift'], correct:0},
-      {q: 'Which operator is used for exponentiation in Python?', a:['^','**','exp','%%'], correct:1},
-      {q: 'Which company developed Java?', a:['Sun Microsystems','IBM','Microsoft','Apple'], correct:0},
-      {q: 'In CSS, which property changes text color?', a:['font-color','text-color','color','background'], correct:2},
-      {q: 'Which keyword is used to define a function in Python?', a:['func','def','function','define'], correct:1},
-      {q: 'HTML tags are enclosed in?', a:['{}','[]','<>','()'], correct:2},
-      {q: 'Which symbol is used for id selector in CSS?', a:['.','#','*','&'], correct:1}
+    // ---------- PART A (True/False) ----------
+    const partA = [
+      { q: 'Google’s first name was “Backrub.”', a: ['True', 'False'], correct: 0 },
+      { q: 'The “Python” programming language was named after a snake.', a: ['True', 'False'], correct: 1 },
+      { q: 'The first computer mouse was made of wood.', a: ['True', 'False'], correct: 0 },
+      { q: 'Apple’s first computer logo had Isaac Newton sitting under a tree.', a: ['True', 'False'], correct: 0 },
+      { q: 'The first iPhone had no App Store.', a: ['True', 'False'], correct: 0 },
+      { q: 'Linux is an operating system developed by Bill Gates.', a: ['True', 'False'], correct: 1 },
+      { q: 'Google’s headquarters are called the Googleplex.', a: ['True', 'False'], correct: 0 },
+      { q: 'The first website in the world is still online today.', a: ['True', 'False'], correct: 0 },
+      { q: 'Windows 95 introduced the Start Menu.', a: ['True', 'False'], correct: 0 },
+      { q: 'JavaScript and Java are the same programming language.', a: ['True', 'False'], correct: 1 }
+    ];
+
+    // ---------- PART B (Multiple Choice) ----------
+    const partB = [
+      { q: 'Which company owns YouTube?', a: ['Microsoft','Google','Apple','Amazon'], correct: 1 },
+      { q: 'Which of these was the first search engine on the Internet?', a: ['Google','Yahoo','Archie','Bing'], correct: 2 },
+      { q: 'What does “URL” stand for?', a: ['Universal Resource Locator','Uniform Resource Locator','Uniform Reference Link','Universal Reference Link'], correct: 1 },
+      { q: 'What does RAM stand for?', a: ['Random Access Memory','Read Access Memory','Rapid Access Memory','Random Application Memory'], correct: 0 },
+      { q: 'Which programming language’s logo looks like a cup of coffee?', a: ['C++','Java','Python','Ruby'], correct: 1 },
+      { q: 'Which company developed the Android operating system?', a: ['Microsoft','Apple','Google','Samsung'], correct: 2 },
+      { q: 'Which of these is an open-source operating system?', a: ['Windows','Linux','macOS','iOS'], correct: 1 },
+      { q: 'Who is the founder of Microsoft?', a: ['Steve Jobs','Bill Gates','Elon Musk','Mark Zuckerberg'], correct: 1 },
+      { q: 'Which programming language is primarily used for iOS app development?', a: ['Swift','Java','Python','Ruby'], correct: 0 },
+      { q: 'Which language was developed at Bell Labs in the 1970s?', a: ['Python','C','Java','Ruby'], correct: 1 }
     ];
 
     let questions = [];
@@ -119,15 +124,18 @@
     let score = 0;
     let player = '';
 
-    function getRandomQuestions(count){
-      const shuffled = [...allQuestions].sort(()=>0.5 - Math.random());
-      return shuffled.slice(0,count);
+    function getRandomItems(arr, count){
+      const shuffled = [...arr].sort(()=>0.5 - Math.random());
+      return shuffled.slice(0, count);
     }
 
     function startGame(){
       player = document.getElementById('username').value.trim();
       if(!player){ alert('Enter your name!'); return; }
-      questions = getRandomQuestions(15);
+      const selectedA = getRandomItems(partA, 3);
+      const selectedB = getRandomItems(partB, 3);
+      questions = [...selectedA, ...selectedB].sort(()=>0.5 - Math.random());
+      current = 0; score = 0;
       document.getElementById('start').style.display='none';
       document.getElementById('quiz').style.display='block';
       document.getElementById('finish').style.display='none';
@@ -207,4 +215,3 @@
   </script>
 </body>
 </html>
-
