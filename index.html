@@ -17,18 +17,27 @@
     }
     .container {
       width: 90%;
-      max-width: 450px;
-      background: rgba(255,255,255,0.1);
+      max-width: 900px;
+      display: flex;
+      gap: 20px;
+      background: rgba(255,255,255,0.05);
       padding: 20px;
       border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    .game {
+      flex: 2;
       text-align: center;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
     }
-    h1 {
-      margin-bottom: 15px;
-      font-size: 24px;
-      color: #fff;
+    .leaderboard {
+      flex: 1;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 12px;
+      max-height: 500px;
+      overflow-y: auto;
     }
+    h1 { margin-bottom: 15px; font-size: 24px; }
     input, button {
       width: 100%;
       padding: 10px;
@@ -37,58 +46,40 @@
       font-size: 16px;
       margin: 10px 0;
     }
-    input {
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-    }
-    button {
-      background: #4ecca3;
-      color: #000;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .option {
-      background: rgba(255,255,255,0.2);
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+    input { background: rgba(255,255,255,0.2); color: #fff; }
+    button { background: #4ecca3; color: #000; cursor: pointer; font-weight: bold; }
+    .option { background: rgba(255,255,255,0.2); margin: 8px 0; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.3s; }
     .option:hover { background: rgba(255,255,255,0.4); }
     .correct { background: #4caf50 !important; color: #fff; }
     .wrong { background: #e53935 !important; color: #fff; }
-    #leaderboard div {
-      background: rgba(255,255,255,0.15);
-      padding: 8px;
-      border-radius: 6px;
-      margin: 5px 0;
-    }
+    #leaderboard h3 { margin-top: 0; }
+    #leaderboard div { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 6px; margin: 5px 0; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Coding Trivia</h1>
-    <div id="start">
-      <input type="text" id="username" placeholder="Enter your name">
-      <button onclick="startGame()">Start</button>
+    <div class="game">
+      <h1>Coding Trivia</h1>
+      <div id="start">
+        <input type="text" id="username" placeholder="Enter your name">
+        <button onclick="startGame()">Start</button>
+      </div>
+
+      <div id="quiz" style="display:none;">
+        <div id="question"></div>
+        <div id="options"></div>
+        <button id="nextBtn" style="display:none;" onclick="nextQuestion()">Next</button>
+      </div>
+
+      <div id="finish" style="display:none;">
+        <h3 id="scoreText"></h3>
+        <button onclick="renderLeaderboard()">Show Leaderboard</button>
+      </div>
     </div>
 
-    <div id="quiz" style="display:none;">
-      <div id="question"></div>
-      <div id="options"></div>
-      <button id="nextBtn" style="display:none;" onclick="nextQuestion()">Next</button>
-    </div>
-
-    <div id="finish" style="display:none;">
-      <h3 id="scoreText"></h3>
-      <button onclick="showLeaderboard()">Show Leaderboard</button>
-    </div>
-
-    <div id="leaderboard" style="display:none;">
+    <div class="leaderboard" id="leaderboard">
       <h3>Leaderboard</h3>
-      <div id="scores"></div>
-      <button onclick="resetForNextUser()">Next User</button>
+      <div id="scores">No scores yet</div>
     </div>
   </div>
 
@@ -149,6 +140,7 @@
       document.getElementById('finish').style.display='block';
       document.getElementById('scoreText').textContent = `${player}, your score is ${score}`;
       saveScore();
+      renderLeaderboard();
     }
 
     function saveScore(){
@@ -158,23 +150,16 @@
       localStorage.setItem('ctLeaderboard', JSON.stringify(board.slice(0,10)));
     }
 
-    function showLeaderboard(){
-      document.getElementById('finish').style.display='none';
+    function renderLeaderboard(){
       const scores = JSON.parse(localStorage.getItem('ctLeaderboard')||'[]');
       const div = document.getElementById('scores');
       div.innerHTML='';
+      if(scores.length===0){ div.innerHTML='No scores yet'; return; }
       scores.forEach((s,i)=>{
         div.innerHTML += `<div>${i+1}. ${s.name} - ${s.score}</div>`;
       });
-      document.getElementById('leaderboard').style.display='block';
-    }
-
-    function resetForNextUser(){
-      current=0; score=0; player='';
-      document.getElementById('username').value='';
-      document.getElementById('leaderboard').style.display='none';
-      document.getElementById('start').style.display='block';
     }
   </script>
 </body>
 </html>
+
