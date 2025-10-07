@@ -91,7 +91,7 @@
   </div>
 
   <script>
-    const questions = [
+    const allQuestions = [
       {q: 'Which language styles web pages?', a:['HTML','CSS','Python','C++'], correct:1},
       {q: 'What does HTML stand for?', a:['HyperText Markup Language','Home Tool Markup','Hyperlinks and Text Markup','HighText Machine Language'], correct:0},
       {q: 'Which of these is a JS framework?', a:['Django','Flask','React','Laravel'], correct:2},
@@ -106,16 +106,28 @@
       {q: 'JS uses which for equality check?', a:['=','==','===','!='], correct:2},
       {q: 'Which is used to declare a variable in JS?', a:['var','let','const','All of these'], correct:3},
       {q: 'Which method is used to remove last element in array in JS?', a:['pop','push','shift','unshift'], correct:0},
-      {q: 'Which operator is used for exponentiation in Python?', a:['^','**','exp','%%'], correct:1}
+      {q: 'Which operator is used for exponentiation in Python?', a:['^','**','exp','%%'], correct:1},
+      {q: 'Which company developed Java?', a:['Sun Microsystems','IBM','Microsoft','Apple'], correct:0},
+      {q: 'In CSS, which property changes text color?', a:['font-color','text-color','color','background'], correct:2},
+      {q: 'Which keyword is used to define a function in Python?', a:['func','def','function','define'], correct:1},
+      {q: 'HTML tags are enclosed in?', a:['{}','[]','<>','()'], correct:2},
+      {q: 'Which symbol is used for id selector in CSS?', a:['.','#','*','&'], correct:1}
     ];
 
+    let questions = [];
     let current = 0;
     let score = 0;
     let player = '';
 
+    function getRandomQuestions(count){
+      const shuffled = [...allQuestions].sort(()=>0.5 - Math.random());
+      return shuffled.slice(0,count);
+    }
+
     function startGame(){
       player = document.getElementById('username').value.trim();
       if(!player){ alert('Enter your name!'); return; }
+      questions = getRandomQuestions(15);
       document.getElementById('start').style.display='none';
       document.getElementById('quiz').style.display='block';
       document.getElementById('finish').style.display='none';
@@ -195,4 +207,3 @@
   </script>
 </body>
 </html>
-
