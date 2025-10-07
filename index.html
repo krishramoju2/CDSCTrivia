@@ -19,7 +19,7 @@
       width: 90%;
       max-width: 900px;
       display: flex;
-      gap: 40px; /* Increased space between game and leaderboard */
+      gap: 60px; /* Increased distance between game and leaderboard */
       background: rgba(255,255,255,0.05);
       padding: 20px;
       border-radius: 15px;
@@ -36,6 +36,9 @@
       border-radius: 12px;
       max-height: 500px;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     h1 { margin-bottom: 15px; font-size: 24px; }
     input, button {
@@ -54,6 +57,7 @@
     .wrong { background: #e53935 !important; color: #fff; }
     #leaderboard h3 { margin-top: 0; }
     #leaderboard div { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 6px; margin: 5px 0; }
+    #clearBtn { margin-top: 10px; background: #e53935; color: #fff; }
   </style>
 </head>
 <body>
@@ -78,8 +82,11 @@
     </div>
 
     <div class="leaderboard" id="leaderboard">
-      <h3>Leaderboard</h3>
-      <div id="scores">No scores yet</div>
+      <div>
+        <h3>Leaderboard</h3>
+        <div id="scores">No scores yet</div>
+      </div>
+      <button id="clearBtn" onclick="clearLeaderboard()">Clear Leaderboard</button>
     </div>
   </div>
 
@@ -169,7 +176,13 @@
       document.getElementById('finish').style.display='none';
     }
 
+    function clearLeaderboard(){
+      localStorage.removeItem('ctLeaderboard');
+      renderLeaderboard();
+    }
+
     renderLeaderboard();
   </script>
 </body>
 </html>
+
