@@ -51,10 +51,10 @@
     }
     input { background: rgba(255,255,255,0.2); color: #fff; }
     button { background: #4ecca3; color: #000; cursor: pointer; font-weight: bold; }
-    .option { background: rgba(255,255,255,0.2); margin: 8px 0; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.3s; }
+    .option { background: rgba(255,255,255,0.2); margin: 8px 0; padding: 10px; border-radius: 8px; cursor: pointer; transition: all 0.3s; }
     .option:hover { background: rgba(255,255,255,0.4); }
-    .correct { background: #4caf50 !important; color: #fff; }
-    .wrong { background: #e53935 !important; color: #fff; }
+    .correct { background: #4caf50 !important; color: #fff; box-shadow: 0 0 10px #4caf50; }
+    .wrong { background: #e53935 !important; color: #fff; box-shadow: 0 0 10px #e53935; }
     #leaderboard h3 { margin-top: 0; }
     #leaderboard div { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 6px; margin: 5px 0; }
     #clearBtn { margin-top: 10px; background: #e53935; color: #fff; }
@@ -72,7 +72,6 @@
       <div id="quiz" style="display:none;">
         <div id="question"></div>
         <div id="options"></div>
-        <button id="nextBtn" style="display:none;" onclick="nextQuestion()">Next</button>
       </div>
 
       <div id="finish" style="display:none;">
@@ -91,32 +90,30 @@
   </div>
 
   <script>
-    // ---------- PART A (True/False) ----------
     const partA = [
-      { q: 'Google’s first name was “Backrub.”', a: ['True', 'False'], correct: 0 },
-      { q: 'The “Python” programming language was named after a snake.', a: ['True', 'False'], correct: 1 },
-      { q: 'The first computer mouse was made of wood.', a: ['True', 'False'], correct: 0 },
-      { q: 'Apple’s first computer logo had Isaac Newton sitting under a tree.', a: ['True', 'False'], correct: 0 },
-      { q: 'The first iPhone had no App Store.', a: ['True', 'False'], correct: 0 },
-      { q: 'Linux is an operating system developed by Bill Gates.', a: ['True', 'False'], correct: 1 },
-      { q: 'Google’s headquarters are called the Googleplex.', a: ['True', 'False'], correct: 0 },
-      { q: 'The first website in the world is still online today.', a: ['True', 'False'], correct: 0 },
-      { q: 'Windows 95 introduced the Start Menu.', a: ['True', 'False'], correct: 0 },
-      { q: 'JavaScript and Java are the same programming language.', a: ['True', 'False'], correct: 1 }
+      {q:"The first computer virus was created just for fun, not to harm.", a:["True","False"], correct:0},
+      {q:"Google’s first name was 'Backrub.'", a:["True","False"], correct:0},
+      {q:"The 'Python' programming language was named after a snake.", a:["True","False"], correct:1},
+      {q:"The blue screen of death means your computer is haunted.", a:["True","False"], correct:1},
+      {q:"'Captcha' stands for 'Completely Automated Public Turing test to tell Computers and Humans Apart.'", a:["True","False"], correct:0},
+      {q:"Bill Gates wrote the first version of Microsoft Word in one night.", a:["True","False"], correct:1},
+      {q:"You can Google search using a photo.", a:["True","False"], correct:0},
+      {q:"Mark Zuckerberg created Facebook just to make a dating site for Harvard students.", a:["True","False"], correct:0},
+      {q:"'Cookies' on websites are tiny sweet files stored on your laptop.", a:["True","False"], correct:0},
+      {q:"The word 'Google' comes from a misspelling of 'Googol,' which means 1 followed by 100 zeros.", a:["True","False"], correct:0},
     ];
 
-    // ---------- PART B (Multiple Choice) ----------
     const partB = [
-      { q: 'Which company owns YouTube?', a: ['Microsoft','Google','Apple','Amazon'], correct: 1 },
-      { q: 'Which of these was the first search engine on the Internet?', a: ['Google','Yahoo','Archie','Bing'], correct: 2 },
-      { q: 'What does “URL” stand for?', a: ['Universal Resource Locator','Uniform Resource Locator','Uniform Reference Link','Universal Reference Link'], correct: 1 },
-      { q: 'What does RAM stand for?', a: ['Random Access Memory','Read Access Memory','Rapid Access Memory','Random Application Memory'], correct: 0 },
-      { q: 'Which programming language’s logo looks like a cup of coffee?', a: ['C++','Java','Python','Ruby'], correct: 1 },
-      { q: 'Which company developed the Android operating system?', a: ['Microsoft','Apple','Google','Samsung'], correct: 2 },
-      { q: 'Which of these is an open-source operating system?', a: ['Windows','Linux','macOS','iOS'], correct: 1 },
-      { q: 'Who is the founder of Microsoft?', a: ['Steve Jobs','Bill Gates','Elon Musk','Mark Zuckerberg'], correct: 1 },
-      { q: 'Which programming language is primarily used for iOS app development?', a: ['Swift','Java','Python','Ruby'], correct: 0 },
-      { q: 'Which language was developed at Bell Labs in the 1970s?', a: ['Python','C','Java','Ruby'], correct: 1 }
+      {q:"Which of these is not a programming language?", a:["Python","Ruby","Cheetah","Java"], correct:2},
+      {q:"Which company owns YouTube?", a:["Microsoft","Google","Apple","Amazon"], correct:1},
+      {q:"Which of these was the first search engine on the Internet?", a:["Google","Yahoo","Archie","Bing"], correct:2},
+      {q:"What does 'URL' stand for?", a:["Universal Resource Locator","Uniform Resource Locator","Uniform Reference Link","Universal Reference Link"], correct:1},
+      {q:"Which shortcut key closes all tabs on your browser?", a:["Ctrl + W","Ctrl + Shift + W","Ctrl + Q","Ctrl + Alt + W"], correct:1},
+      {q:"What does RAM stand for?", a:["Random Access Memory","Read Access Memory","Rapid Access Memory","Random Application Memory"], correct:0},
+      {q:"Which programming language’s logo looks like a cup of coffee?", a:["C++","Java","Python","Ruby"], correct:1},
+      {q:"What does 'AI' stand for?", a:["Advanced Intelligence","Artificial Intelligence","Automated Internet","Artificial Input"], correct:1},
+      {q:"Which company developed the Android operating system?", a:["Microsoft","Apple","Google","Samsung"], correct:2},
+      {q:"Which of these is an open-source operating system?", a:["Windows","Linux","macOS","iOS"], correct:1},
     ];
 
     let questions = [];
@@ -124,18 +121,17 @@
     let score = 0;
     let player = '';
 
-    function getRandomItems(arr, count){
-      const shuffled = [...arr].sort(()=>0.5 - Math.random());
-      return shuffled.slice(0, count);
+    function getRandomQuestions(){
+      const shuffledA = [...partA].sort(()=>0.5-Math.random()).slice(0,3);
+      const shuffledB = [...partB].sort(()=>0.5-Math.random()).slice(0,3);
+      return [...shuffledA,...shuffledB].sort(()=>0.5-Math.random());
     }
 
     function startGame(){
       player = document.getElementById('username').value.trim();
       if(!player){ alert('Enter your name!'); return; }
-      const selectedA = getRandomItems(partA, 3);
-      const selectedB = getRandomItems(partB, 3);
-      questions = [...selectedA, ...selectedB].sort(()=>0.5 - Math.random());
-      current = 0; score = 0;
+      questions = getRandomQuestions();
+      current=0; score=0;
       document.getElementById('start').style.display='none';
       document.getElementById('quiz').style.display='block';
       document.getElementById('finish').style.display='none';
@@ -150,8 +146,8 @@
       q.a.forEach((opt,i)=>{
         const div = document.createElement('div');
         div.className='option';
-        div.textContent=opt;
-        div.onclick=()=>selectOption(i,div);
+        div.textContent = opt;
+        div.onclick = () => selectOption(i,div);
         optionsDiv.appendChild(div);
       });
     }
@@ -160,17 +156,15 @@
       const q = questions[current];
       const all = document.querySelectorAll('.option');
       all.forEach(o=>o.onclick=null);
+
       if(i===q.correct){ score+=10; div.classList.add('correct'); }
       else { div.classList.add('wrong'); all[q.correct].classList.add('correct'); }
-      document.getElementById('nextBtn').style.display='block';
-    }
 
-    function nextQuestion(){
-      current++;
-      if(current<questions.length){
-        document.getElementById('nextBtn').style.display='none';
-        showQuestion();
-      } else finishGame();
+      setTimeout(()=>{
+        current++;
+        if(current<questions.length) showQuestion();
+        else finishGame();
+      }, 300); // 0.3s glow before next
     }
 
     function finishGame(){
