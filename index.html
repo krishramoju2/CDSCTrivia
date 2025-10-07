@@ -19,7 +19,7 @@
       width: 90%;
       max-width: 900px;
       display: flex;
-      gap: 20px;
+      gap: 40px; /* Increased space between game and leaderboard */
       background: rgba(255,255,255,0.05);
       padding: 20px;
       border-radius: 15px;
@@ -73,7 +73,7 @@
 
       <div id="finish" style="display:none;">
         <h3 id="scoreText"></h3>
-        <button onclick="renderLeaderboard()">Show Leaderboard</button>
+        <button onclick="resetForNextUser()">Play Again</button>
       </div>
     </div>
 
@@ -101,6 +101,7 @@
       if(!player){ alert('Enter your name!'); return; }
       document.getElementById('start').style.display='none';
       document.getElementById('quiz').style.display='block';
+      document.getElementById('finish').style.display='none';
       showQuestion();
     }
 
@@ -159,7 +160,16 @@
         div.innerHTML += `<div>${i+1}. ${s.name} - ${s.score}</div>`;
       });
     }
+
+    function resetForNextUser(){
+      current=0; score=0; player='';
+      document.getElementById('username').value='';
+      document.getElementById('start').style.display='block';
+      document.getElementById('quiz').style.display='none';
+      document.getElementById('finish').style.display='none';
+    }
+
+    renderLeaderboard();
   </script>
 </body>
 </html>
-
