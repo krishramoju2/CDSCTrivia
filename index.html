@@ -1,209 +1,226 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Coding Trivia</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #2b1055, #7597de);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      width: 90%;
-      max-width: 900px;
-      display: flex;
-      gap: 60px;
-      background: rgba(255,255,255,0.05);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
-    .game {
-      flex: 2;
-      text-align: center;
-    }
-    .leaderboard {
-      flex: 1;
-      background: rgba(255,255,255,0.1);
-      padding: 15px;
-      border-radius: 12px;
-      max-height: 500px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    h1 { margin-bottom: 15px; font-size: 24px; }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      margin: 10px 0;
-    }
-    input { background: rgba(255,255,255,0.2); color: #fff; }
-    button { background: #4ecca3; color: #000; cursor: pointer; font-weight: bold; }
-    .option { background: rgba(255,255,255,0.2); margin: 8px 0; padding: 10px; border-radius: 8px; cursor: pointer; transition: background 0.3s; }
-    .option:hover { background: rgba(255,255,255,0.4); }
-    .correct { background: #4caf50 !important; color: #fff; }
-    .wrong { background: #e53935 !important; color: #fff; }
-    #leaderboard h3 { margin-top: 0; }
-    #leaderboard div { background: rgba(255,255,255,0.15); padding: 8px; border-radius: 6px; margin: 5px 0; }
-    #clearBtn { margin-top: 10px; background: #e53935; color: #fff; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🎯 Coding Trivia Quick</title>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+    height: 100vh;
+    margin: 0;
+    padding: 30px;
+  }
+  .container {
+    display: flex;
+    gap: 60px;
+  }
+  #quiz-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+  }
+  #leaderboard {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    height: fit-content;
+  }
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+  input {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+</style>
 </head>
 <body>
   <div class="container">
-    <div class="game">
-      <h1>Coding Trivia</h1>
-      <div id="start">
-        <input type="text" id="username" placeholder="Enter your name">
+    <div id="quiz-box">
+      <h2>🎯 Coding Trivia Quick</h2>
+      <div id="start-screen">
+        <input type="text" id="username" placeholder="Enter your name" />
+        <br />
         <button onclick="startGame()">Start</button>
       </div>
-
-      <div id="quiz" style="display:none;">
-        <div id="question"></div>
+      <div id="question-screen" style="display:none;">
+        <h3 id="question"></h3>
         <div id="options"></div>
-        <button id="nextBtn" style="display:none;" onclick="nextQuestion()">Next</button>
+        <button onclick="nextQuestion()" id="next-btn" style="display:none;">Next</button>
       </div>
-
-      <div id="finish" style="display:none;">
-        <h3 id="scoreText"></h3>
-        <button onclick="resetForNextUser()">Play Again</button>
+      <div id="end-screen" style="display:none;">
+        <h3 id="score"></h3>
+        <button onclick="restartGame()">Play Again (New User)</button>
       </div>
     </div>
-
-    <div class="leaderboard" id="leaderboard">
-      <div>
-        <h3>Leaderboard</h3>
-        <div id="scores">No scores yet</div>
-      </div>
-      <button id="clearBtn" onclick="clearLeaderboard()">Clear Leaderboard</button>
+    <div id="leaderboard">
+      <h3>🏆 Leaderboard</h3>
+      <ul id="leaderboard-list"></ul>
+      <button onclick="clearLeaderboard()">Clear Leaderboard</button>
     </div>
   </div>
+<script>
+const partA = [
+  {q: 'The first computer virus was created just for fun, not to harm.', a: true},
+  {q: 'Google’s first name was “Backrub.”', a: true},
+  {q: 'The “Python” programming language was named after a snake.', a: false},
+  {q: 'The blue screen of death means your computer is haunted.', a: false},
+  {q: '“Captcha” stands for “Completely Automated Public Turing test to tell Computers and Humans Apart.”', a: true},
+  {q: 'Bill Gates wrote the first version of Microsoft Word in one night.', a: false},
+  {q: 'You can Google search using a photo.', a: true},
+  {q: 'Mark Zuckerberg created Facebook just to make a dating site for Harvard students.', a: true},
+  {q: '“Cookies” on websites are tiny sweet files stored on your laptop.', a: true},
+  {q: 'The word “Google” comes from a misspelling of “Googol,” which means 1 followed by 100 zeros.', a: true},
+  {q: 'The first email ever sent was in 1971.', a: true},
+  {q: 'You can run a computer without any RAM installed.', a: false},
+  {q: 'Apple’s first computer logo had Isaac Newton sitting under a tree.', a: true},
+  {q: 'Elon Musk invented the Internet.', a: false},
+  {q: 'The first iPhone had no App Store.', a: true},
+  {q: 'The first-ever video uploaded on YouTube was of cats.', a: false},
+  {q: 'The programming language C was developed in the 1970s.', a: true},
+  {q: 'Google’s headquarters are called the Googleplex.', a: true},
+  {q: 'TikTok was originally called Musical.ly.', a: true},
+  {q: 'Windows 95 introduced the Start Menu.', a: true},
+  {q: 'The first computer mouse was made of wood.', a: true},
+  {q: 'Linux is an operating system developed by Bill Gates.', a: false},
+  {q: 'Gmail was launched after Google acquired Hotmail.', a: false},
+  {q: 'Instagram was launched before Facebook.', a: false},
+  {q: 'JavaScript and Java are the same programming language.', a: false},
+  {q: 'Facebook owns WhatsApp.', a: true},
+  {q: 'The first version of Windows was called Windows 1.0.', a: true},
+  {q: 'Moore’s Law predicts that computer processor speed doubles every year.', a: false},
+  {q: 'The first website in the world is still online today.', a: true},
+  {q: 'Google Maps can predict traffic conditions in real-time.', a: true}
+];
 
-  <script>
-    const allQuestions = [
-      {q: 'Which language styles web pages?', a:['HTML','CSS','Python','C++'], correct:1},
-      {q: 'What does HTML stand for?', a:['HyperText Markup Language','Home Tool Markup','Hyperlinks and Text Markup','HighText Machine Language'], correct:0},
-      {q: 'Which of these is a JS framework?', a:['Django','Flask','React','Laravel'], correct:2},
-      {q: 'Which data structure uses LIFO?', a:['Queue','Stack','Tree','Graph'], correct:1},
-      {q: 'Command to init Git repo?', a:['git init','git start','git new','git create'], correct:0},
-      {q: 'CSS stands for?', a:['Cascading Style Sheets','Computer Style Sheets','Creative Style System','Colorful Style Sheets'], correct:0},
-      {q: 'Which symbol is used for comments in JS?', a:['//','#','/* */','$$'], correct:0},
-      {q: 'Which method adds an element at the end of an array in JS?', a:['push','pop','shift','unshift'], correct:0},
-      {q: 'Which HTML tag is for a hyperlink?', a:['<a>','<link>','<href>','<h1>'], correct:0},
-      {q: 'Python is a ?', a:['Compiled','Interpreted','Markup','Assembly'], correct:1},
-      {q: 'Which HTML tag is for table row?', a:['<tr>','<td>','<table>','<th>'], correct:0},
-      {q: 'JS uses which for equality check?', a:['=','==','===','!='], correct:2},
-      {q: 'Which is used to declare a variable in JS?', a:['var','let','const','All of these'], correct:3},
-      {q: 'Which method is used to remove last element in array in JS?', a:['pop','push','shift','unshift'], correct:0},
-      {q: 'Which operator is used for exponentiation in Python?', a:['^','**','exp','%%'], correct:1},
-      {q: 'Which company developed Java?', a:['Sun Microsystems','IBM','Microsoft','Apple'], correct:0},
-      {q: 'In CSS, which property changes text color?', a:['font-color','text-color','color','background'], correct:2},
-      {q: 'Which keyword is used to define a function in Python?', a:['func','def','function','define'], correct:1},
-      {q: 'HTML tags are enclosed in?', a:['{}','[]','<>','()'], correct:2},
-      {q: 'Which symbol is used for id selector in CSS?', a:['.','#','*','&'], correct:1}
-    ];
+const partB = [
+  {q: 'Which of these is not a programming language?', o: ['Python', 'Ruby', 'Cheetah', 'Java'], a: 'Cheetah'},
+  {q: 'Which company owns YouTube?', o: ['Microsoft', 'Google', 'Apple', 'Amazon'], a: 'Google'},
+  {q: 'Which of these was the first search engine on the Internet?', o: ['Google', 'Yahoo', 'Archie', 'Bing'], a: 'Archie'},
+  {q: 'What does “URL” stand for?', o: ['Universal Resource Locator', 'Uniform Resource Locator', 'Uniform Reference Link', 'Universal Reference Link'], a: 'Uniform Resource Locator'},
+  {q: 'Which shortcut key closes all tabs on your browser?', o: ['Ctrl + W', 'Ctrl + Shift + W', 'Ctrl + Q', 'Ctrl + Alt + W'], a: 'Ctrl + Shift + W'},
+  {q: 'What does RAM stand for?', o: ['Random Access Memory', 'Read Access Memory', 'Rapid Access Memory', 'Random Application Memory'], a: 'Random Access Memory'},
+  {q: 'Which programming language’s logo looks like a cup of coffee?', o: ['C++', 'Java', 'Python', 'Ruby'], a: 'Java'},
+  {q: 'What does “AI” stand for?', o: ['Advanced Intelligence', 'Artificial Intelligence', 'Automated Internet', 'Artificial Input'], a: 'Artificial Intelligence'},
+  {q: 'Which company developed the Android operating system?', o: ['Microsoft', 'Apple', 'Google', 'Samsung'], a: 'Google'},
+  {q: 'Which of these is an open-source operating system?', o: ['Windows', 'Linux', 'macOS', 'iOS'], a: 'Linux'},
+  {q: 'Who is the founder of Microsoft?', o: ['Steve Jobs', 'Bill Gates', 'Elon Musk', 'Mark Zuckerberg'], a: 'Bill Gates'},
+  {q: 'What is the main function of a compiler?', o: ['Translate code into machine language', 'Store files', 'Protect from viruses', 'Connect to the internet'], a: 'Translate code into machine language'},
+  {q: 'Which of these is a search engine owned by Microsoft?', o: ['Bing', 'Google', 'Yahoo', 'DuckDuckGo'], a: 'Bing'},
+  {q: 'The “Backrub” was the original name of which search engine?', o: ['Yahoo', 'Google', 'Bing', 'AltaVista'], a: 'Google'},
+  {q: 'Which programming language is primarily used for iOS app development?', o: ['Swift', 'Java', 'Python', 'Ruby'], a: 'Swift'}
+];
 
-    let questions = [];
-    let current = 0;
-    let score = 0;
-    let player = '';
+let allQuestions = [];
+let currentIndex = 0;
+let score = 0;
+let currentUser = '';
+let leaderboard = [];
 
-    function getRandomQuestions(count){
-      const shuffled = [...allQuestions].sort(()=>0.5 - Math.random());
-      return shuffled.slice(0,count);
-    }
+function getRandomElements(arr, count) {
+  return arr.sort(() => 0.5 - Math.random()).slice(0, count);
+}
 
-    function startGame(){
-      player = document.getElementById('username').value.trim();
-      if(!player){ alert('Enter your name!'); return; }
-      questions = getRandomQuestions(15);
-      document.getElementById('start').style.display='none';
-      document.getElementById('quiz').style.display='block';
-      document.getElementById('finish').style.display='none';
-      showQuestion();
-    }
+function startGame() {
+  currentUser = document.getElementById('username').value.trim();
+  if (!currentUser) return alert('Please enter your name!');
+  allQuestions = [...getRandomElements(partA, 3), ...getRandomElements(partB, 3)];
+  currentIndex = 0;
+  score = 0;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('end-screen').style.display = 'none';
+  document.getElementById('question-screen').style.display = 'block';
+  showQuestion();
+}
 
-    function showQuestion(){
-      const q = questions[current];
-      document.getElementById('question').innerHTML = `<h3>${q.q}</h3>`;
-      const optionsDiv = document.getElementById('options');
-      optionsDiv.innerHTML='';
-      q.a.forEach((opt,i)=>{
-        const div = document.createElement('div');
-        div.className='option';
-        div.textContent=opt;
-        div.onclick=()=>selectOption(i,div);
-        optionsDiv.appendChild(div);
-      });
-    }
+function showQuestion() {
+  const q = allQuestions[currentIndex];
+  document.getElementById('question').innerText = q.q;
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
 
-    function selectOption(i,div){
-      const q = questions[current];
-      const all = document.querySelectorAll('.option');
-      all.forEach(o=>o.onclick=null);
-      if(i===q.correct){ score+=10; div.classList.add('correct'); }
-      else { div.classList.add('wrong'); all[q.correct].classList.add('correct'); }
-      document.getElementById('nextBtn').style.display='block';
-    }
+  if (q.o) {
+    q.o.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt;
+      btn.onclick = () => selectAnswer(opt === q.a);
+      optionsDiv.appendChild(btn);
+    });
+  } else {
+    ['True', 'False'].forEach(val => {
+      const btn = document.createElement('button');
+      btn.textContent = val;
+      btn.onclick = () => selectAnswer((val === 'True') === q.a);
+      optionsDiv.appendChild(btn);
+    });
+  }
+}
 
-    function nextQuestion(){
-      current++;
-      if(current<questions.length){
-        document.getElementById('nextBtn').style.display='none';
-        showQuestion();
-      } else finishGame();
-    }
+function selectAnswer(correct) {
+  if (correct) score++;
+  document.getElementById('next-btn').style.display = 'block';
+  const buttons = document.querySelectorAll('#options button');
+  buttons.forEach(b => b.disabled = true);
+}
 
-    function finishGame(){
-      document.getElementById('quiz').style.display='none';
-      document.getElementById('finish').style.display='block';
-      document.getElementById('scoreText').textContent = `${player}, your score is ${score}`;
-      saveScore();
-      renderLeaderboard();
-    }
+function nextQuestion() {
+  currentIndex++;
+  document.getElementById('next-btn').style.display = 'none';
+  if (currentIndex < allQuestions.length) showQuestion();
+  else endGame();
+}
 
-    function saveScore(){
-      const board = JSON.parse(localStorage.getItem('ctLeaderboard')||'[]');
-      board.push({name:player, score:score});
-      board.sort((a,b)=>b.score - a.score);
-      localStorage.setItem('ctLeaderboard', JSON.stringify(board.slice(0,10)));
-    }
+function endGame() {
+  document.getElementById('question-screen').style.display = 'none';
+  document.getElementById('end-screen').style.display = 'block';
+  document.getElementById('score').innerText = `${currentUser}, your score: ${score}/${allQuestions.length}`;
+  leaderboard.push({name: currentUser, score});
+  updateLeaderboard();
+}
 
-    function renderLeaderboard(){
-      const scores = JSON.parse(localStorage.getItem('ctLeaderboard')||'[]');
-      const div = document.getElementById('scores');
-      div.innerHTML='';
-      if(scores.length===0){ div.innerHTML='No scores yet'; return; }
-      scores.forEach((s,i)=>{
-        div.innerHTML += `<div>${i+1}. ${s.name} - ${s.score}</div>`;
-      });
-    }
+function updateLeaderboard() {
+  const list = document.getElementById('leaderboard-list');
+  list.innerHTML = '';
+  leaderboard.sort((a,b) => b.score - a.score).forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = `${item.name}: ${item.score}`;
+    list.appendChild(li);
+  });
+}
 
-    function resetForNextUser(){
-      current=0; score=0; player='';
-      document.getElementById('username').value='';
-      document.getElementById('start').style.display='block';
-      document.getElementById('quiz').style.display='none';
-      document.getElementById('finish').style.display='none';
-    }
+function clearLeaderboard() {
+  leaderboard = [];
+  updateLeaderboard();
+}
 
-    function clearLeaderboard(){
-      localStorage.removeItem('ctLeaderboard');
-      renderLeaderboard();
-    }
-
-    renderLeaderboard();
-  </script>
+function restartGame() {
+  document.getElementById('username').value = '';
+  document.getElementById('start-screen').style.display = 'block';
+  document.getElementById('end-screen').style.display = 'none';
+}
+</script>
 </body>
 </html>
